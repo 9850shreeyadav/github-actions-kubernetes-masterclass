@@ -46,6 +46,7 @@ jobs:
 
       - name: Download and tidy dependencies
         run: go mod tidy
+        working-directory: ./backend
 
       - name: Run backend tests
         run: go test ./...
