@@ -44,6 +44,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
+      - name: Download and tidy dependencies
+        run: go mod tidy
+
       - name: Run backend tests
         run: go test ./...
         working-directory: ./backend
