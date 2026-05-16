@@ -78,6 +78,8 @@ jobs:
         uses: actions/dependency-review-action@v5
         with:
           fail-on-severity: moderate
+          base-ref: ${{ github.event.pull_request.base.sha }}
+          head-ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Run Gitleaks secret scan
         uses: gitleaks/gitleaks-action@v2
