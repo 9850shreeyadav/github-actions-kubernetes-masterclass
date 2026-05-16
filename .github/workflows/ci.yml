@@ -77,7 +77,7 @@ jobs:
       - name: Run dependency review
         uses: actions/dependency-review-action@v5
         with:
-          fail-on-severity: medium
+          fail-on-severity: moderate
 
       - name: Run Gitleaks secret scan
         uses: gitleaks/gitleaks-action@v2
