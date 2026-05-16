@@ -93,31 +93,33 @@ jobs:
         run: |
           docker buildx build --load --cache-from=type=local,src=.buildx-cache \
             --cache-to=type=local,dest=.buildx-cache,mode=max \
-            -t $BACKEND_IMAGE_LATEST \
-            -t $BACKEND_IMAGE_SHA \
+            -t ${{ env.BACKEND_IMAGE_LATEST }} \
+            -t ${{ env.BACKEND_IMAGE_SHA }} \
             ./backend
 
       - name: Build frontend image for scan
         run: |
           docker buildx build --load --cache-from=type=local,src=.buildx-cache \
             --cache-to=type=local,dest=.buildx-cache,mode=max \
-            -t $FRONTEND_IMAGE_LATEST \
-            -t $FRONTEND_IMAGE_SHA \
+            -t ${{ env.FRONTEND_IMAGE_LATEST }} \
+            -t ${{ env.FRONTEND_IMAGE_SHA }} \
             ./frontend
 
       - name: Scan backend image with Trivy
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: $BACKEND_IMAGE_LATEST
-          format: table
+          image-ref: ${{ env.BACKEND_IMAGE_LATEST }}
+          format: 'table'
           exit-code: 1
+          severity: 'HIGH,CRITICAL'
 
       - name: Scan frontend image with Trivy
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: $FRONTEND_IMAGE_LATEST
-          format: table
+          image-ref: ${{ env.FRONTEND_IMAGE_LATEST }}
+          format: 'table'
           exit-code: 1
+          severity: 'HIGH,CRITICAL'
 
       - name: Log in to Docker Hub
         if: ${{ vars.DEPLOY_ENABLED == 'true' }}
@@ -129,11 +131,11 @@ jobs:
       - name: Push backend image
         if: ${{ vars.DEPLOY_ENABLED == 'true' }}
         run: |
-          docker push $BACKEND_IMAGE_LATEST
-          docker push $BACKEND_IMAGE_SHA
+          docker push ${{ env.BACKEND_IMAGE_LATEST }}
+          docker push ${{ env.BACKEND_IMAGE_SHA }}
 
       - name: Push frontend image
         if: ${{ vars.DEPLOY_ENABLED == 'true' }}
         run: |
-          docker push $FRONTEND_IMAGE_LATEST
-          docker push $FRONTEND_IMAGE_SHA
+          docker push ${{ env.FRONTEND_IMAGE_LATEST }}
+          docker push ${{ env.FRONTEND_IMAGE_SHA }}
