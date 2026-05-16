@@ -61,24 +61,25 @@ jobs:
         run: gosec ./...
 
       - name: Lint backend Dockerfile
-        uses: hadolint/hadolint-action@v2
+        uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: backend/Dockerfile
 
       - name: Lint frontend Dockerfile
-        uses: hadolint/hadolint-action@v2
+        uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: frontend/Dockerfile
 
       - name: Run dependency review
-        uses: github/dependency-review-action@v3
+        uses: actions/dependency-review-action@v5
         with:
           fail-on-severity: medium
 
       - name: Run Gitleaks secret scan
-        uses: zricethezav/gitleaks-action@v8
-        with:
-          args: '--path=. --exit-code=1 --verbose'
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -100,7 +101,7 @@ jobs:
             ./frontend
 
       - name: Scan backend image with Trivy
-        uses: aquasecurity/trivy-action@v1
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: $BACKEND_IMAGE_LATEST
           format: table
