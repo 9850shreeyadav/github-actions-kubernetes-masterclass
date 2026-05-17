@@ -41,7 +41,7 @@ jobs:
             # Deploy with prod compose file
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d
-            docker image prune -f
+            docker image prune --force
             
             echo "✅ Prod deployment complete"
             echo "📊 Status:"
