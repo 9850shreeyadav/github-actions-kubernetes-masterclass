@@ -39,10 +39,10 @@ jobs:
             export $(cat .env.prod | grep -v '#' | xargs)
             
             # Deploy with prod compose file
-            docker compose -f docker-compose.prod.yml pull
-            docker compose -f docker-compose.prod.yml up -d
+            docker-compose -f docker-compose.prod.yml pull
+            docker-compose -f docker-compose.prod.yml up -d
             docker image prune --force
             
             echo "✅ Prod deployment complete"
             echo "📊 Status:"
-            docker compose -f docker-compose.prod.yml ps
+            docker-compose -f docker-compose.prod.yml ps
